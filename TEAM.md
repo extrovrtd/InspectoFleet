@@ -22,7 +22,7 @@
 |---|------|------------|-----------------|-------|-----------|-------------|
 | 1 |      |            |                 |       | Product/Client Manager | |
 | 2 |      |            |                 |       | Architecture & Context Lead | |
-| 3 |      |            |                 |       | Implementation Leads | DevOps / Release Lead |
+| 3 | Ocloo Eugene Selasi | 22415470 | extrovrtd | esocloo001@st.ug.edu.gh | Implementation Leads | DevOps / Release Lead |
 | 4 |      |            |                 |       | Implementer | |
 | 5 |      |            |                 |       | Implementer | |
 | 6 |      |            |                 |       | Validation/QA Lead | |
