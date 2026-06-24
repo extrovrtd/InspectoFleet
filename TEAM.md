@@ -25,7 +25,7 @@
 | 3 | Ocloo Eugene Selasi | 22415470 | extrovrtd | esocloo001@st.ug.edu.gh | Implementation Leads | DevOps / Release Lead |
 | 4 |Ali khadija|22302684|bigdee-jaa | kali013@st.ug.edu.gh       | Research lead | |
 | 5 | Eugene Menye Shiangah Senam     | 22401853         | Eugene1413      | esmenye_shiangah@st.ug.edu.gh     | DevOps/Release & Documentation Lead | |
-| 6 |      |            |                 |       | Validation/QA Lead | |
+| 6 | Paa Kweku Tawiah Oppong-Ntori   |      22382269      |       Cooper1-lab         |    pktoppong-ntori@st.ug.edu.gh   | Validation/QA Lead | |
 | 7 |      |            |                 |       |Architecture and Context Lead  | |
 
  
