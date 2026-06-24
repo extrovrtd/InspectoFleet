@@ -2,11 +2,11 @@
 
 ## Project title
 
-<!-- InspectoFleet -->
+ InspectoFleet
 
 ## Team name
 
-<!-- SNART -->
+ SNART
 
 ## Client
 
