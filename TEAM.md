@@ -21,12 +21,13 @@
 | # | Name | Student ID | GitHub username | Email | Main role | Backup role |
 |---|------|------------|-----------------|-------|-----------|-------------|
 | 1 | Freeman K. A. Wagba     |   22409281         |   FREEMAN-FAWK              | fkawagba@st.ug.edu.gh      | Product/Client Manager | |
-| 2 |      |            |                 |       | Architecture & Context Lead | |
+| 2 |   Seity Matin   | 22372116    |  4bdu-1             |  mseity001@st.ug.edu.gh  | Documentation / Evidence lead | |
 | 3 | Ocloo Eugene Selasi | 22415470 | extrovrtd | esocloo001@st.ug.edu.gh | Implementation Leads | DevOps / Release Lead |
 | 4 |Ali khadija|22302684|bigdee-jaa | kali013@st.ug.edu.gh       | Research lead | |
-| 5 |      |            |                 |       | Implementer | |
+| 5 | Eugene Menye Shiangah Senam     | 22401853         | Eugene1413      | esmenye_shiangah@st.ug.edu.gh     | DevOps/Release & Documentation Lead | |
 | 6 |      |            |                 |       | Validation/QA Lead | |
-| 7 |      |            |                 |       | DevOps/Release & Documentation Lead | |
+| 7 |      |            |                 |       |Architecture and Context Lead  | |
+
  
 ## Team agreement
 
