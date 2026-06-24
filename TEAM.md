@@ -2,19 +2,19 @@
 
 ## Project title
 
-<!-- Insert project title -->
+<!-- InspectoFleet -->
 
 ## Team name
 
-<!-- Insert team name -->
+<!-- SNART -->
 
 ## Client
 
-- Client name:
-- Organization/business:
-- Client contact person:
-- Client contact method:
-- Intended users:
+- Client name: Phanuel K. A. Wagba
+- Organization/business: KAL Car Rentals Ltd. 
+- Client contact person: Client Manager
+- Client contact method: WhatsApp
+- Intended users: Counter agents, Kal (owner), Fleet managers, Customers 
 
 ## Team members
 
@@ -22,7 +22,7 @@
 |---|------|------------|-----------------|-------|-----------|-------------|
 | 1 |      |            |                 |       | Product/Client Manager | |
 | 2 |      |            |                 |       | Architecture & Context Lead | |
-| 3 |      |            |                 |       | Implementer | |
+| 3 |      |            |                 |       | Implementation Leads | DevOps / Release Lead |
 | 4 |      |            |                 |       | Implementer | |
 | 5 |      |            |                 |       | Implementer | |
 | 6 |      |            |                 |       | Validation/QA Lead | |
@@ -32,29 +32,35 @@
 
 ### Communication channels
 
-- Primary channel:
-- Emergency channel:
-- Expected response time:
+- Primary channel: WhatsApp 
+- Emergency channel: Phone Call
+- Expected response time: Within 6 hours
 
 ### Meetings
 
-- Regular meeting day/time:
-- Meeting platform/location:
-- Meeting minutes keeper:
-- Attendance rule:
+- Regular meeting day/time: 3times before deadline
+- Meeting platform/location: In person and online
+- Meeting minutes keeper: Documentation Lead
+- Attendance rule: Must notify 2+ hour if unable to attend
 
 ### Work division
 
-Explain how the team will assign, review, and complete work.
+•	Tasks are assigned via: self-assigned during weekly meeting
+•	Work is reviewed by: at least one other member before merge
+•	A task is accepted as done when: at least one teammate has reviewed and commented on it, and it has been merged into the main branch.
 
 ### Version control rules
 
-Explain branch naming, commit message rules, PR rules, and merge rules.
+•	Branch naming: feature/<issue-number>-short-name
+•	Commit message format: type: short description
+•	Pull Request size limit: no more than ~400 lines changed per PR where reasonably possible
+•	Reviewer expectations: at least 1 approval required, reviewer responds within 12 hours
+•	Merge rule: no direct commits to main without approval
 
 ### Academic integrity and AI rules
 
-Explain how the team will prevent freeloading, plagiarism, dishonest AI use, and unexplained work.
+Team reports to lecturer if it affects shared grade
 
 ### Conflict resolution
 
-Explain what happens if a member fails to attend, fails to contribute, submits dishonest work, or blocks progress.
+Disagreements are resolved by: discussion in weekly meeting
