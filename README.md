@@ -3,6 +3,15 @@
 # DCIT208 Client Project 2026 - Team Engineering Repository
 
 This repository is the official engineering workspace for a DCIT208 client project.
+## Project Summary
+InspectoFleet is a digital vehicle inspection and fleet-tracking system 
+built for Kal Car Rentals, replacing their paper-based inspection process 
+with photo/timestamp evidence capture and fleet status visibility.
+
+## Problem Statement
+Kal Car Rentals currently relies on manual paper checklists for vehicle 
+inspections, leading to disputes over pre-existing damage and a lack of 
+real-time visibility into vehicle location and fuel/battery status.
 
 Each team will work with a real client to engineer, test, deploy, document, and hand over a working software solution. The project will be assessed not only by the final application but also by engineering evidence: requirements, backlog, issues, pull requests, code reviews, tests, CI logs, deployment records, client feedback, sprint reports, AI usage logs, individual contributions, and final reflection.
 
