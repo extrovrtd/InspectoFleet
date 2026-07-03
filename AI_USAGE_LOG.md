@@ -4,6 +4,8 @@ Every AI-assisted contribution must be logged here.
 
 | Date | Student | Tool used | Prompt/task summary | Output used? | Verification performed | Related issue/PR |
 |------|---------|-----------|---------------------|--------------|------------------------|------------------|
+| YYYY-MM-DD | Ocloo Eugene Selasi | Claude | BStructure and draft D0 Team Charter document — sections A–E with placeholders per deliverable instructions | Yes | Team filled in all real names, contacts, client info, meeting times and consequences; each member approved their own bio | # |
+| YYYY-MM-DD | Name | ChatGPT / Claude / Gemini / Copilot / Cursor / etc. | Brief summary only; do not paste private client data | Yes/No | Explain how you checked correctness | # |
 | YYYY-MM-DD | Name | ChatGPT / Claude / Gemini / Copilot / Cursor / etc. | Brief summary only; do not paste private client data | Yes/No | Explain how you checked correctness | # |
 
 ## Rules
