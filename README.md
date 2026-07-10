@@ -87,6 +87,17 @@ D9-final-demo
 D10-final-handoff
 ```
 
+## Definition of Done
+
+A user story is considered done when:
+- Code is committed via a Pull Request — no direct unreviewed commits to main
+- At least one non-author has reviewed and commented on the PR
+- CI passes or any failure is documented with a remediation plan
+- Tests are written or updated for the story's acceptance criteria
+- Screenshots or demo evidence are attached for any visible UI change
+- The GitHub Issue is moved to Done only after all acceptance criteria are met
+- AI assistance is disclosed in the PR and AI_USAGE_LOG.md if used
+- 
 ## Final repository freeze
 
 All final work must be completed by **Friday, August 28, 2026 at 5:00pm**.
