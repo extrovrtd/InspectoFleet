@@ -97,7 +97,7 @@ A user story is considered done when:
 - Screenshots or demo evidence are attached for any visible UI change
 - The GitHub Issue is moved to Done only after all acceptance criteria are met
 - AI assistance is disclosed in the PR and AI_USAGE_LOG.md if used
-- 
+ 
 ## Final repository freeze
 
 All final work must be completed by **Friday, August 28, 2026 at 5:00pm**.
