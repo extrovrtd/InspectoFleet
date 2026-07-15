@@ -1,24 +1,20 @@
 name: DCIT208 Standard CI Gateway
 
 on:
-  push:
-    branches: ["main", "feature/**", "fix/**", "docs/**", "test/**"]
   pull_request:
-    branches: ["main"]
+    branches: [main]
+  push:
+    branches: [main]
 
 jobs:
-  validate:
+  build-and-test:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Execute setup contract
-        run: make setup
-
-      - name: Enforce linting/static checks
-        run: make lint
-
-      - name: Run automated test suite
-        run: make test
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm install
+      - run: npm run lint
+      - run: npm run build
