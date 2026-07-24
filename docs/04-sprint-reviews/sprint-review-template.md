@@ -26,7 +26,7 @@ and create staff accounts.
 ## Completed work
 | Story/Issue | Completed? | Evidence/PR | Notes |
 |-------------|------------|-------------|-------|
-| US-01: Counter agent can log in | Partial | PR #[number] — feat: implement login page | Login UI built, Supabase Auth connected, redirect to dashboard working. PR opened and CI passing. No automated tests yet. |
+| US-01: Counter agent can log in | Partial | PR #23 — feat: implement login page | Login UI built, Supabase Auth connected, redirect to dashboard working. PR opened and CI passing. No automated tests yet. |
 | US-02 through US-13 (remaining) | No | — | Carried over to Sprint 2. Root cause: learning curve with Next.js/Supabase and D4 setup overlapping with sprint window. |
 
 ## Functionality available at end of sprint
@@ -37,7 +37,7 @@ credentials display a clear error message. The dashboard shows the
 current status of Sprint 1 stories.
 
 No inspection workflow, fleet dashboard, or admin features are
-available yet — these are carried over to Sprint 2.
+available yet these are carried over to Sprint 2.
 
 ## Changes to requirements/user stories
 No user stories were changed, split, added or removed during Sprint 1.
@@ -84,9 +84,8 @@ the inspection feature is ready for testing.
 
 ## Lessons learned
 - **Continue:** Starting with the authentication foundation (US-01)
-  was the right decision — all other stories depend on it.
-- **Stop:** Committing build cache files (.next/) to the repo —
-  fixed by updating .gitignore.
+  was the right decision all other stories depend on it.
+- **Stop:** Committing build cache files (.next/) to the repo fixed by updating .gitignore.
 - **Improve:** Reduce sprint commitment to match actual capacity.
   Establish 24-hour PR review rule. Write at least one test per
   story before marking done.
