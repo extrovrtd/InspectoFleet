@@ -4,11 +4,6 @@ import { useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
-
 export default function NewInspectionPage() {
   const [registration, setRegistration] = useState('')
   const [type, setType] = useState<'handover' | 'return'>('handover')
@@ -21,6 +16,11 @@ export default function NewInspectionPage() {
     e.preventDefault()
     setLoading(true)
     setError('')
+
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
 
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { router.push('/login'); return }
