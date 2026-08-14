@@ -1,3 +1,4 @@
+
 # AI Usage Log
 
 Every AI-assisted contribution must be logged here.
@@ -13,7 +14,7 @@ Every AI-assisted contribution must be logged here.
 | 2026-07-24 | Ocloo Eugene Selasi | Claude (Anthropic) | Structure and draft D5 Sprint 1 Review Report and provide login page code scaffold for US-01 | Yes | Sprint decisions, velocity data and reflection written by team. Login page code reviewed, tested and integrated by Ocloo. Screenshots and evidence gathered by team. | #D5 |
 | 2026-07-31 | Freeman K. A. Wagba | Claude (Anthropic) | Structure and draft D6 Sprint 2 review report, test plan (T-01 through T-07), bug log (BUG-01 through BUG-04) and quality evidence sections | Yes | All test results executed manually by Paa Kweku against live Vercel deployment. Bug findings verified by team against actual codebase. Sprint decisions and reflection written by team. | #D6 |
 | 2026-08-05 | Freeman K. A. Wagba | Claude (Anthropic) | Structure and draft D7 Sprint 3 review, security/privacy/AI audit tables, and provide US-02 start inspection code scaffold | Yes | US-02 code reviewed, tested manually on localhost and Vercel, debugged RLS policies and profile issues by Ocloo. All audit findings verified by team against actual codebase. | #D7|
-
+| 2026-08-14 | Ocloo Eugene Selasi | Claude (Anthropic) | Structure and draft D8 Sprint 4 review report and provide code scaffolds for US-06 complete inspection, US-07 inspection history and US-08 fleet dashboard | Yes | All code reviewed, TypeScript errors fixed, tested manually on localhost and Vercel by Ocloo. Sprint decisions and reflection content supplied by team. | #D8 |
 ## Rules
 
 1. Do not paste confidential client data into AI tools unless the client and lecturer have explicitly permitted it.
