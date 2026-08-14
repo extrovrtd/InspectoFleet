@@ -22,6 +22,11 @@ export default function DashboardPage() {
               className="w-full bg-white border border-gray-200 text-gray-700 rounded-lg px-4 py-3 text-sm font-medium hover:bg-gray-50 text-left">
               🔍 Search inspection history
             </button>
+            <button
+             onClick={() => router.push('/fleet')}
+             className="w-full bg-white border border-gray-200 text-gray-700 rounded-lg px-4 py-3 text-sm font-medium hover:bg-gray-50 text-left">
+             🚗 Fleet dashboard
+           </button>
           </div>
         </div>
       </div>
