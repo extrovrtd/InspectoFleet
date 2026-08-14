@@ -2,9 +2,16 @@
 import { useState } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
+type InspectionRow = {
+  id: string
+  inspection_type: string
+  status: string
+  started_at: string
+  vehicles: { registration_number: string } | null
+}
 export default function InspectionsPage() {
   const [search, setSearch] = useState('')
-  const [results, setResults] = useState<{id:string,inspection_type:string,status:string,started_at:string,vehicles:{registration_number:string}|null}[]>([])
+  const [results, setResults] = useState<InspectionRow[]>([])
   const [loading, setLoading] = useState(false)
   const [searched, setSearched] = useState(false)
   const router = useRouter()
@@ -14,7 +21,8 @@ export default function InspectionsPage() {
     setSearched(true)
     const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!,process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
     const { data } = await supabase.from('inspection_records').select('id,inspection_type,status,started_at,vehicles(registration_number)').order('started_at',{ascending:false}).limit(50)
-    const filtered = (data||[]).filter((r)=>r.vehicles?.registration_number?.toUpperCase().includes(search.toUpperCase()))
+    const rows = (data || []) as unknown as InspectionRow[]
+    const filtered = rows.filter((r)=>r.vehicles?.registration_number?.toUpperCase().includes(search.toUpperCase()))
     setResults(filtered)
     setLoading(false)
   }
