@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 
 export default function InspectionsPage() {
   const [search, setSearch] = useState('')
-  const [results, setResults] = useState<any[]>([])
+  const [results, setResults] = useState<Record<string, unknown>[]>([])
   const [loading, setLoading] = useState(false)
   const [searched, setSearched] = useState(false)
   const router = useRouter()
