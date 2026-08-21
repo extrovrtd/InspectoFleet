@@ -7,15 +7,21 @@ import { createClient } from '@supabase/supabase-js'
 const ANGLES = ['front', 'rear', 'left', 'right', 'interior'] as const
 type Angle = typeof ANGLES[number]
 
+type PhotoState = {
+  path: string
+  notes: string
+  saved: boolean
+}
+
 export default function InspectionPage() {
   const params = useParams()
   const id = params?.id as string
   const router = useRouter()
-  const [photos, setPhotos] = useState<Record<Angle, string | null>>({
-    front: null, rear: null, left: null, right: null, interior: null
-  })
+  const [photos, setPhotos] = useState<Partial<Record<Angle, PhotoState>>>({})
   const [currentAngle, setCurrentAngle] = useState<Angle>('front')
-  const [uploading, setUploading] = useState<Angle | null>(null)
+  const [notes, setNotes] = useState('')
+  const [uploading, setUploading] = useState(false)
+  const [saving, setSaving] = useState(false)
   const [completing, setCompleting] = useState(false)
   const [completed, setCompleted] = useState(false)
   const [error, setError] = useState('')
@@ -24,7 +30,7 @@ export default function InspectionPage() {
   async function handlePhoto(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
-    setUploading(currentAngle)
+    setUploading(true)
     setError('')
 
     const supabase = createClient(
@@ -32,16 +38,14 @@ export default function InspectionPage() {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     )
 
-    const timestamp = new Date().toISOString()
     const path = `${id}/${currentAngle}-${Date.now()}.jpg`
-
     const { error: uploadError } = await supabase.storage
       .from('evidence-photos')
       .upload(path, file, { contentType: file.type })
 
     if (uploadError) {
       setError(`Upload failed: ${uploadError.message}`)
-      setUploading(null)
+      setUploading(false)
       return
     }
 
@@ -51,27 +55,50 @@ export default function InspectionPage() {
         inspection_id: id,
         angle: currentAngle,
         storage_path: path,
-        captured_at: timestamp,
+        captured_at: new Date().toISOString(),
       })
 
     if (dbError) {
-      setError(`Could not save photo record: ${dbError.message}`)
-      setUploading(null)
+      setError(`Could not save photo: ${dbError.message}`)
+      setUploading(false)
       return
     }
 
-    setPhotos(prev => ({ ...prev, [currentAngle]: path }))
-    setUploading(null)
+    setPhotos(prev => ({ ...prev, [currentAngle]: { path, notes: '', saved: false } }))
+    setNotes('')
+    setUploading(false)
+  }
+
+  async function handleSaveAndNext() {
+    setSaving(true)
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+
+    if (notes.trim()) {
+      await supabase
+        .from('evidence_photos')
+        .update({ agent_notes: notes })
+        .eq('inspection_id', id)
+        .eq('angle', currentAngle)
+    }
+
+    setPhotos(prev => ({
+      ...prev,
+      [currentAngle]: { ...prev[currentAngle]!, notes, saved: true }
+    }))
 
     const nextIndex = ANGLES.indexOf(currentAngle) + 1
     if (nextIndex < ANGLES.length) {
       setCurrentAngle(ANGLES[nextIndex])
+      setNotes('')
     }
+    setSaving(false)
   }
 
   async function handleComplete() {
     setCompleting(true)
-    setError('')
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -85,11 +112,11 @@ export default function InspectionPage() {
       setCompleting(false)
     } else {
       setCompleted(true)
-      setCompleting(false)
     }
   }
 
-  const capturedCount = Object.values(photos).filter(Boolean).length
+  const capturedCount = Object.keys(photos).length
+  const currentPhoto = photos[currentAngle]
 
   if (completed) {
     return (
@@ -120,26 +147,26 @@ export default function InspectionPage() {
 
           <p className="text-xs text-gray-400 font-mono mb-4 break-all">{id}</p>
 
-          <div className="flex gap-2 mb-6">
+          <div className="flex gap-1 mb-6">
             {ANGLES.map((angle) => (
-              <button key={angle} onClick={() => setCurrentAngle(angle)}
+              <button key={angle} onClick={() => { setCurrentAngle(angle); setNotes(photos[angle]?.notes || '') }}
                 className={`flex-1 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
                   currentAngle === angle
                     ? 'bg-teal-600 text-white border-teal-600'
                     : photos[angle]
                     ? 'bg-teal-50 text-teal-700 border-teal-200'
-                    : 'bg-white text-gray-500 border-gray-200'
+                    : 'bg-white text-gray-400 border-gray-200'
                 }`}>
-                {photos[angle] ? '✓' : ''} {angle}
+                {photos[angle] ? '✓' : angle}
               </button>
             ))}
           </div>
 
-          <div className="bg-gray-50 rounded-xl p-6 text-center mb-4 border border-gray-200">
-            {photos[currentAngle] ? (
+          <div className="bg-gray-50 rounded-xl p-5 text-center mb-4 border border-gray-200">
+            {currentPhoto ? (
               <div>
-                <p className="text-teal-600 text-sm font-medium mb-2">✅ Photo captured</p>
-                <p className="text-gray-400 text-xs">{currentAngle} angle saved</p>
+                <p className="text-teal-600 text-sm font-medium">✅ Photo captured</p>
+                <p className="text-gray-400 text-xs mt-1 capitalize">{currentAngle} angle saved</p>
               </div>
             ) : (
               <div>
@@ -153,10 +180,28 @@ export default function InspectionPage() {
           <input ref={fileRef} type="file" accept="image/*" capture="environment"
             onChange={handlePhoto} className="hidden" />
 
-          <button onClick={() => fileRef.current?.click()} disabled={!!uploading}
-            className="w-full bg-teal-600 text-white rounded-lg px-4 py-3 text-sm font-medium hover:bg-teal-700 disabled:opacity-50 mb-3">
-            {uploading === currentAngle ? 'Uploading...' : photos[currentAngle] ? 'Retake photo' : 'Take photo'}
+          <button onClick={() => fileRef.current?.click()} disabled={uploading}
+            className="w-full bg-teal-600 text-white rounded-lg px-4 py-2.5 text-sm font-medium hover:bg-teal-700 disabled:opacity-50 mb-3">
+            {uploading ? 'Uploading...' : currentPhoto ? 'Retake photo' : 'Take photo'}
           </button>
+
+          {currentPhoto && (
+            <div className="mb-3">
+              <label className="block text-xs text-gray-500 mb-1 capitalize">
+                Damage notes — {currentAngle} (optional)
+              </label>
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Describe any visible damage, scratches or dents..."
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none h-20"
+              />
+              <button onClick={handleSaveAndNext} disabled={saving}
+                className="w-full mt-2 bg-gray-100 text-gray-700 rounded-lg px-4 py-2 text-sm font-medium hover:bg-gray-200 disabled:opacity-50">
+                {saving ? 'Saving...' : ANGLES.indexOf(currentAngle) < ANGLES.length - 1 ? 'Save notes & next angle →' : 'Save notes'}
+              </button>
+            </div>
+          )}
 
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-3">

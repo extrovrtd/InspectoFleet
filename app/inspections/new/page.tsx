@@ -78,8 +78,14 @@ export default function NewInspectionPage() {
               <input
                 type="text"
                 value={registration}
-                onChange={(e) => setRegistration(e.target.value)}
-                required
+                onChange={(e) => {
+                 const raw = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '')
+                 let formatted = raw
+                 if (raw.length > 2) formatted = raw.slice(0, 2) + '-' + raw.slice(2)
+                 if (raw.length > 6) formatted = raw.slice(0, 2) + '-' + raw.slice(2, 6) + '-' + raw.slice(6, 8)
+                 setRegistration(formatted)
+                }}
+                required maxLength={10}
                 placeholder="e.g. GR-2045-21"
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 uppercase"
               />
