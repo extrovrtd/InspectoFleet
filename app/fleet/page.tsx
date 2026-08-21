@@ -76,7 +76,9 @@ export default function FleetPage() {
             <div className="space-y-3">
               <p className="text-sm text-gray-500">{filtered.length} vehicle{filtered.length !== 1 ? 's' : ''}</p>
               {filtered.map(v => (
-                <div key={v.id} className="border border-gray-200 rounded-lg p-4 flex justify-between items-center">
+                <div key={v.id} 
+                 onClick={() => router.push(`/fleet/${v.id}`)}
+                 className="border border-gray-200 rounded-lg p-4 flex justify-between items-center cursor-pointer hover:bg-gray-50 transition-colors">
                   <div>
                     <p className="text-sm font-medium text-gray-900">{v.registration_number}</p>
                     <p className="text-xs text-gray-500 mt-0.5">{v.make} {v.model} · {v.year}</p>

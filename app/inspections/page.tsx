@@ -43,7 +43,9 @@ export default function InspectionsPage() {
             <div className="space-y-3">
               <p className="text-sm text-gray-500">{results.length} record{results.length!==1?'s':''} found</p>
               {results.map((r)=>(
-                <div key={r.id} className="border border-gray-200 rounded-lg p-4">
+                <div key={r.id} 
+                  onClick={() => router.push(`/inspections/${r.id}`)}
+                  className="border border-gray-200 rounded-lg p-4 cursor-pointer hover:bg-gray-50">
                   <div className="flex justify-between items-start">
                     <div>
                       <p className="text-sm font-medium text-gray-900">{r.vehicles?.registration_number}</p>
