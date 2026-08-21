@@ -31,17 +31,12 @@ export default function NewInspectionPage() {
       .eq('registration_number', registration.toUpperCase())
       .single()
 
-    let vehicleId = vehicle?.id
-
-    if (!vehicleId) {
-      const { data: newVehicle, error: vErr } = await supabase
-        .from('vehicles')
-        .insert({ registration_number: registration.toUpperCase(), make: 'Unknown', model: 'Unknown', year: 2020 })
-        .select('id')
-        .single()
-      if (vErr) { setError('Could not create vehicle record.'); setLoading(false); return }
-      vehicleId = newVehicle.id
+    if (!vehicle) {
+      setError('Vehicle not found. Please ask an administrator to register this vehicle first.')
+     setLoading(false)
+     return
     }
+    const vehicleId = vehicle.id
 
     const { data: inspection, error: iErr } = await supabase
       .from('inspection_records')

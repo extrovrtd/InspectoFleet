@@ -6,7 +6,13 @@ import { createClient } from '@supabase/supabase-js'
 const ANGLES = ['front', 'rear', 'left', 'right', 'interior'] as const
 type Angle = typeof ANGLES[number]
 type PhotoState = { path: string; notes: string; saved: boolean }
-type ExistingPhoto = { angle: string; storage_path: string; captured_at: string; agent_notes: string | null }
+type ExistingPhoto = {
+  angle: string
+  storage_path: string
+  captured_at: string
+  agent_notes: string | null
+  url?: string | null
+}
 type InspectionRecord = {
   status: string
   inspection_type: string
@@ -34,6 +40,26 @@ export default function InspectionPage() {
   const [error, setError] = useState('')
   const fileRef = useRef<HTMLInputElement>(null)
 
+  async function loadPhotosWithUrls() {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+    const { data: ph } = await supabase
+      .from('evidence_photos')
+      .select('angle,storage_path,captured_at,agent_notes')
+      .eq('inspection_id', id)
+    const withUrls = await Promise.all(
+      (ph || []).map(async (photo) => {
+        const { data: signed } = await supabase.storage
+          .from('evidence-photos')
+          .createSignedUrl(photo.storage_path, 3600)
+        return { ...photo, url: signed?.signedUrl || null }
+      })
+    )
+    return withUrls as ExistingPhoto[]
+  }
+
   useEffect(() => {
     async function loadInspection() {
       const supabase = createClient(
@@ -45,15 +71,12 @@ export default function InspectionPage() {
         .select('status,inspection_type,started_at,completed_at,contract_ref,vehicles(registration_number)')
         .eq('id', id)
         .single()
-      const { data: ph } = await supabase
-        .from('evidence_photos')
-        .select('angle,storage_path,captured_at,agent_notes')
-        .eq('inspection_id', id)
+      const photosWithUrls = await loadPhotosWithUrls()
       setInspectionData(insp as unknown as InspectionRecord)
-      setExistingPhotos((ph || []) as ExistingPhoto[])
+      setExistingPhotos(photosWithUrls)
       if (insp?.status === 'complete') {
         setCompleted(true)
-        setCompletedAt(insp.completed_at)
+        setCompletedAt(insp.completed_at as string)
       }
       setLoadingData(false)
     }
@@ -115,16 +138,24 @@ export default function InspectionPage() {
       .from('inspection_records')
       .update({ status: 'complete', completed_at: now })
       .eq('id', id)
-    if (error) { setError('Could not complete inspection.'); setCompleting(false) }
-    else {
-      const { data: ph } = await supabase
-        .from('evidence_photos')
-        .select('angle,storage_path,captured_at,agent_notes')
-        .eq('inspection_id', id)
-      setExistingPhotos((ph || []) as ExistingPhoto[])
-      setCompletedAt(now)
-      setCompleted(true)
+    if (error) { setError('Could not complete inspection.'); setCompleting(false); return }
+
+    const { data: insp } = await supabase
+      .from('inspection_records')
+      .select('vehicle_id, inspection_type')
+      .eq('id', id)
+      .single()
+    if (insp) {
+      const newVehicleStatus = insp.inspection_type === 'handover' ? 'Rented' : 'Available'
+      await supabase.from('vehicles')
+        .update({ current_status: newVehicleStatus })
+        .eq('id', insp.vehicle_id)
     }
+
+    const photosWithUrls = await loadPhotosWithUrls()
+    setExistingPhotos(photosWithUrls)
+    setCompletedAt(now)
+    setCompleted(true)
   }
 
   if (loadingData) return (
@@ -141,11 +172,11 @@ export default function InspectionPage() {
         <div className="max-w-md mx-auto">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center gap-3 mb-4">
-              <button onClick={() => router.back()} className="text-gray-400 hover:text-gray-600 text-sm">Back</button>
+              <button onClick={() => router.back()} className="text-gray-400 hover:text-gray-600 text-sm">← Back</button>
               <h1 className="text-lg font-bold text-gray-900">Inspection evidence</h1>
             </div>
             <div className="bg-teal-50 border border-teal-200 rounded-lg p-4 mb-4">
-              <p className="text-teal-800 font-medium text-sm">Inspection completed and locked</p>
+              <p className="text-teal-800 font-medium text-sm">✅ Inspection completed and locked</p>
               {inspectionData && (
                 <div className="mt-2 space-y-1">
                   <p className="text-teal-700 text-xs capitalize">Type: {inspectionData.inspection_type}</p>
@@ -167,25 +198,31 @@ export default function InspectionPage() {
             {existingPhotos.length === 0 ? (
               <p className="text-gray-400 text-sm text-center py-4">No photos captured for this inspection.</p>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {existingPhotos.map((photo) => (
-                  <div key={photo.angle} className="border border-gray-200 rounded-lg p-4">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <p className="text-sm font-medium text-gray-900 capitalize">{photo.angle}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">
-                          {new Date(photo.captured_at).toLocaleDateString('en-GB', {
-                            day: 'numeric', month: 'short', year: 'numeric',
-                            hour: '2-digit', minute: '2-digit', second: '2-digit'
-                          })}
-                        </p>
-                        {photo.agent_notes && (
-                          <p className="text-xs text-amber-700 mt-1 bg-amber-50 px-2 py-1 rounded">
-                            Note: {photo.agent_notes}
+                  <div key={photo.angle} className="border border-gray-200 rounded-lg overflow-hidden">
+                    {photo.url && (
+                      <img src={photo.url} alt={`${photo.angle} view`}
+                        className="w-full h-56 object-cover bg-gray-100" />
+                    )}
+                    <div className="p-4">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="text-sm font-medium text-gray-900 capitalize">{photo.angle}</p>
+                          <p className="text-xs text-gray-500 mt-0.5">
+                            {new Date(photo.captured_at).toLocaleDateString('en-GB', {
+                              day: 'numeric', month: 'short', year: 'numeric',
+                              hour: '2-digit', minute: '2-digit', second: '2-digit'
+                            })}
                           </p>
-                        )}
+                          {photo.agent_notes && (
+                            <p className="text-xs text-amber-700 mt-2 bg-amber-50 px-2 py-1 rounded">
+                              Note: {photo.agent_notes}
+                            </p>
+                          )}
+                        </div>
+                        <span className="text-xs bg-teal-50 text-teal-700 px-2 py-1 rounded-full font-medium">saved</span>
                       </div>
-                      <span className="text-xs bg-teal-50 text-teal-700 px-2 py-1 rounded-full font-medium">saved</span>
                     </div>
                   </div>
                 ))}
@@ -210,7 +247,7 @@ export default function InspectionPage() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <div className="flex items-center gap-3 mb-4">
             <button onClick={() => router.push('/dashboard')}
-              className="text-gray-400 hover:text-gray-600 text-sm">Back</button>
+              className="text-gray-400 hover:text-gray-600 text-sm">← Back</button>
             <h1 className="text-lg font-bold text-gray-900">Capture photos</h1>
           </div>
           <p className="text-xs text-gray-400 font-mono mb-4 break-all">{id}</p>
